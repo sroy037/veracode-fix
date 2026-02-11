@@ -15,13 +15,12 @@ function makeHttpsRequest(options: any): Promise<any> {
             });
             res.on('end', () => {
                 try {
-                    // Parse response: check Content-Type AND validate JSON structure
+                    // Check Content-Type to determine how to parse response
                     const contentType = res.headers['content-type'] || '';
                     let responseData = data;
                     
-                    // Only parse as JSON if Content-Type says so AND response looks like JSON (starts with { or [)
-                    if (contentType.includes('application/json') && data && (data.trim().startsWith('{') || data.trim().startsWith('['))) {
-                        responseData = JSON.parse(data);
+                    if (contentType.includes('application/json')) {
+                        responseData = data ? JSON.parse(data) : null;
                     }
                     // else: keep raw response as-is
                     
@@ -96,22 +95,12 @@ export async function upload(platform:any, tar:any, options:any) {
             });
             res.on('end', () => {
                 try {
-                    // Parse response: check Content-Type AND validate JSON structure
+                    // Check Content-Type to determine how to parse response
                     const contentType = res.headers['content-type'] || '';
                     let responseData = data;
                     
-                    if (options.DEBUG == 'true') {
-                        console.log('Response Content-Type: ' + contentType);
-                        console.log('Response data (first 100 chars): ' + data.substring(0, 100));
-                        console.log('Data starts with { or [? ' + (data && (data.trim().startsWith('{') || data.trim().startsWith('['))));
-                    }
-                    
-                    // Only parse as JSON if Content-Type says so AND response looks like JSON (starts with { or [)
-                    if (contentType.includes('application/json') && data && (data.trim().startsWith('{') || data.trim().startsWith('['))) {
-                        if (options.DEBUG == 'true') console.log('Parsing as JSON');
-                        responseData = JSON.parse(data);
-                    } else {
-                        if (options.DEBUG == 'true') console.log('Keeping as raw response');
+                    if (contentType.includes('application/json')) {
+                        responseData = data ? JSON.parse(data) : null;
                     }
                     // else: keep raw response (plain text UUID, etc)
                     
@@ -129,6 +118,7 @@ export async function upload(platform:any, tar:any, options:any) {
                         console.log('Project ID is:')
                         console.log(responseData);
                         resolve(responseData);
+
                     }
                 } catch (parseError) {
                     console.log('Error parsing response')
@@ -162,7 +152,7 @@ export async function uploadBatch(credentials:any, tarPath:any, options:any) {
 
     if (options.DEBUG == 'true'){
         console.log('#######- DEBUG MODE -#######')
-        console.log('requests.ts - uploadBatch')
+        console.log('requests.ts - upload')
         console.log('Formdata created')
         console.log(formData)
         console.log('ViD: '+platform.cleanedID+' Key: '+platform.cleanedKEY+' Host: '+platform.apiUrl+' URL: fix/v1/project/batch_upload'+' Method: POST')
@@ -193,18 +183,12 @@ export async function uploadBatch(credentials:any, tarPath:any, options:any) {
             });
             res.on('end', () => {
                 try {
-                    // Parse response: check Content-Type AND validate JSON structure
+                    // Check Content-Type to determine how to parse response
                     const contentType = res.headers['content-type'] || '';
                     let responseData = data;
                     
-                    if (options.DEBUG == 'true') {
-                        console.log('Response Content-Type: ' + contentType);
-                        console.log('Response data (first 100 chars): ' + data.substring(0, 100));
-                    }
-                    
-                    // Only parse as JSON if Content-Type says so AND response looks like JSON (starts with { or [)
-                    if (contentType.includes('application/json') && data && (data.trim().startsWith('{') || data.trim().startsWith('['))) {
-                        responseData = JSON.parse(data);
+                    if (contentType.includes('application/json')) {
+                        responseData = data ? JSON.parse(data) : null;
                     }
                     // else: keep raw response (plain text UUID, etc)
                     
@@ -217,10 +201,12 @@ export async function uploadBatch(credentials:any, tarPath:any, options:any) {
                             console.log('#######- DEBUG MODE -#######')
                         }
                     } else {
+
                         console.log('Data uploaded successfully')
                         console.log('Project ID is:')
                         console.log(responseData);
                         resolve(responseData);
+
                     }
                 } catch (parseError) {
                     console.log('Error parsing response')
@@ -252,7 +238,7 @@ async function makeRequest(platform:any, projectId:any, options:any) {
 
     if (options.DEBUG == 'true'){
         console.log('#######- DEBUG MODE -#######')
-        console.log('requests.ts - checkFix')
+        console.log('requests.ts - cehckFix')
         console.log('ViD: '+platform.cleanedID+' Key: '+platform.cleanedKEY+' Host: '+platform.apiUrl+' URL: /fix/v1/project/'+projectId+'/results'+' Method: GET')
         console.log('Auth header created')
         console.log(authHeader)
@@ -335,7 +321,7 @@ async function makeRequestBatch(credentials:any, projectId:any, options:any) {
         console.log('Response is empty. Something went wrong. No fixes generarted. ');
         return 0
     } else {
-        
+
         console.log('Status fetched successfully');
         if (options.DEBUG == 'true'){
             console.log('#######- DEBUG MODE -#######')
@@ -388,6 +374,7 @@ export async function pullBatchFixResults(credentials:any, projectId:any, option
         console.log('#######- DEBUG MODE -#######')
     }
 
+    
     const reqOptions = {
         hostname: platform.apiUrl,
         port: 443,

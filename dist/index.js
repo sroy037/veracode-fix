@@ -52735,12 +52735,11 @@ function makeHttpsRequest(options) {
             });
             res.on('end', () => {
                 try {
-                    // Parse response: check Content-Type AND validate JSON structure
+                    // Check Content-Type to determine how to parse response
                     const contentType = res.headers['content-type'] || '';
                     let responseData = data;
-                    // Only parse as JSON if Content-Type says so AND response looks like JSON (starts with { or [)
-                    if (contentType.includes('application/json') && data && (data.trim().startsWith('{') || data.trim().startsWith('['))) {
-                        responseData = JSON.parse(data);
+                    if (contentType.includes('application/json')) {
+                        responseData = data ? JSON.parse(data) : null;
                     }
                     // else: keep raw response as-is
                     resolve({
@@ -52804,23 +52803,11 @@ function upload(platform, tar, options) {
                 });
                 res.on('end', () => {
                     try {
-                        // Parse response: check Content-Type AND validate JSON structure
+                        // Check Content-Type to determine how to parse response
                         const contentType = res.headers['content-type'] || '';
                         let responseData = data;
-                        if (options.DEBUG == 'true') {
-                            console.log('Response Content-Type: ' + contentType);
-                            console.log('Response data (first 100 chars): ' + data.substring(0, 100));
-                            console.log('Data starts with { or [? ' + (data && (data.trim().startsWith('{') || data.trim().startsWith('['))));
-                        }
-                        // Only parse as JSON if Content-Type says so AND response looks like JSON (starts with { or [)
-                        if (contentType.includes('application/json') && data && (data.trim().startsWith('{') || data.trim().startsWith('['))) {
-                            if (options.DEBUG == 'true')
-                                console.log('Parsing as JSON');
-                            responseData = JSON.parse(data);
-                        }
-                        else {
-                            if (options.DEBUG == 'true')
-                                console.log('Keeping as raw response');
+                        if (contentType.includes('application/json')) {
+                            responseData = data ? JSON.parse(data) : null;
                         }
                         // else: keep raw response (plain text UUID, etc)
                         if (res.statusCode != 200) {
@@ -52867,7 +52854,7 @@ function uploadBatch(credentials, tarPath, options) {
         });
         if (options.DEBUG == 'true') {
             console.log('#######- DEBUG MODE -#######');
-            console.log('requests.ts - uploadBatch');
+            console.log('requests.ts - upload');
             console.log('Formdata created');
             console.log(formData);
             console.log('ViD: ' + platform.cleanedID + ' Key: ' + platform.cleanedKEY + ' Host: ' + platform.apiUrl + ' URL: fix/v1/project/batch_upload' + ' Method: POST');
@@ -52891,16 +52878,11 @@ function uploadBatch(credentials, tarPath, options) {
                 });
                 res.on('end', () => {
                     try {
-                        // Parse response: check Content-Type AND validate JSON structure
+                        // Check Content-Type to determine how to parse response
                         const contentType = res.headers['content-type'] || '';
                         let responseData = data;
-                        if (options.DEBUG == 'true') {
-                            console.log('Response Content-Type: ' + contentType);
-                            console.log('Response data (first 100 chars): ' + data.substring(0, 100));
-                        }
-                        // Only parse as JSON if Content-Type says so AND response looks like JSON (starts with { or [)
-                        if (contentType.includes('application/json') && data && (data.trim().startsWith('{') || data.trim().startsWith('['))) {
-                            responseData = JSON.parse(data);
+                        if (contentType.includes('application/json')) {
+                            responseData = data ? JSON.parse(data) : null;
                         }
                         // else: keep raw response (plain text UUID, etc)
                         if (res.statusCode != 200) {
@@ -52949,7 +52931,7 @@ function makeRequest(platform, projectId, options) {
         });
         if (options.DEBUG == 'true') {
             console.log('#######- DEBUG MODE -#######');
-            console.log('requests.ts - checkFix');
+            console.log('requests.ts - cehckFix');
             console.log('ViD: ' + platform.cleanedID + ' Key: ' + platform.cleanedKEY + ' Host: ' + platform.apiUrl + ' URL: /fix/v1/project/' + projectId + '/results' + ' Method: GET');
             console.log('Auth header created');
             console.log(authHeader);
