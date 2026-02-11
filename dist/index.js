@@ -52770,7 +52770,7 @@ function upload(platform, tar, options) {
         const formData = new form_data_1.default();
         formData.append('data', fileBuffer, 'data.tar.gz');
         formData.append('name', 'data');
-        const authHeader = yield (0, auth_1.calculateAuthorizationHeader)({
+        const authHeader = (0, auth_1.calculateAuthorizationHeader)({
             id: platform.cleanedID,
             key: platform.cleanedKEY,
             host: platform.apiUrl,
@@ -52845,7 +52845,7 @@ function uploadBatch(credentials, tarPath, options) {
         const formData = new form_data_1.default();
         formData.append('data', fileBuffer, 'app.tar.gz');
         formData.append('name', 'data');
-        const authHeader = yield (0, auth_1.calculateAuthorizationHeader)({
+        const authHeader = (0, auth_1.calculateAuthorizationHeader)({
             id: platform.cleanedID,
             key: platform.cleanedKEY,
             host: platform.apiUrl,
@@ -52881,6 +52881,8 @@ function uploadBatch(credentials, tarPath, options) {
                         // Check Content-Type to determine how to parse response
                         const contentType = res.headers['content-type'] || '';
                         let responseData = data;
+                        console.log('Response received from server:');
+                        console.log(responseData);
                         // if (contentType.includes('application/json')) {
                         //     responseData = data ? JSON.parse(data) : null;
                         // }
@@ -52922,7 +52924,7 @@ function checkFix(platform, projectId, options) {
 exports.checkFix = checkFix;
 function makeRequest(platform, projectId, options) {
     return __awaiter(this, void 0, void 0, function* () {
-        const authHeader = yield (0, auth_1.calculateAuthorizationHeader)({
+        const authHeader = (0, auth_1.calculateAuthorizationHeader)({
             id: platform.cleanedID,
             key: platform.cleanedKEY,
             host: platform.apiUrl,
@@ -52949,6 +52951,8 @@ function makeRequest(platform, projectId, options) {
             }
         };
         const response = yield makeHttpsRequest(reqOptions);
+        console.log('Response received from server:');
+        console.log(response);
         if (!response.data) {
             console.log('Response is empty. Retrying in 10 seconds.');
             yield new Promise(resolve => setTimeout(resolve, 10000));
@@ -52978,7 +52982,7 @@ exports.checkFixBatch = checkFixBatch;
 function makeRequestBatch(credentials, projectId, options) {
     return __awaiter(this, void 0, void 0, function* () {
         const platform = yield (0, select_platform_1.selectPlatfrom)(credentials);
-        const authHeader = yield (0, auth_1.calculateAuthorizationHeader)({
+        const authHeader = (0, auth_1.calculateAuthorizationHeader)({
             id: platform.cleanedID,
             key: platform.cleanedKEY,
             host: platform.apiUrl,
@@ -53040,7 +53044,7 @@ function pullBatchFixResults(credentials, projectId, options) {
     return __awaiter(this, void 0, void 0, function* () {
         yield new Promise(resolve => setTimeout(resolve, 5000));
         const platform = yield (0, select_platform_1.selectPlatfrom)(credentials);
-        const authHeader = yield (0, auth_1.calculateAuthorizationHeader)({
+        const authHeader = (0, auth_1.calculateAuthorizationHeader)({
             id: platform.cleanedID,
             key: platform.cleanedKEY,
             host: platform.apiUrl,

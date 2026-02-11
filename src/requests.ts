@@ -4,6 +4,7 @@ import fs from 'fs';
 import FormData from 'form-data';
 import { selectPlatfrom } from './select_platform';
 import * as github from '@actions/github'
+import { c } from 'tar';
 
 // Helper function to make HTTPS requests with proper proxy support
 function makeHttpsRequest(options: any): Promise<any> {
@@ -54,12 +55,12 @@ export async function upload(platform:any, tar:any, options:any) {
     formData.append('data', fileBuffer, 'data.tar.gz');
     formData.append('name', 'data');
     
-    const authHeader = await calculateAuthorizationHeader({
-          id: platform.cleanedID,
-          key: platform.cleanedKEY,
-          host: platform.apiUrl,
-          url: '/fix/v1/project/upload_code',
-          method: 'POST',
+    const authHeader = calculateAuthorizationHeader({
+        id: platform.cleanedID,
+        key: platform.cleanedKEY,
+        host: platform.apiUrl,
+        url: '/fix/v1/project/upload_code',
+        method: 'POST',
     })
 
     if (options.DEBUG == 'true'){
@@ -142,12 +143,12 @@ export async function uploadBatch(credentials:any, tarPath:any, options:any) {
     formData.append('data', fileBuffer, 'app.tar.gz');
     formData.append('name', 'data');
     
-    const authHeader = await calculateAuthorizationHeader({
-          id: platform.cleanedID,
-          key: platform.cleanedKEY,
-          host: platform.apiUrl,
-          url: '/fix/v1/project/batch_upload',
-          method: 'POST',
+    const authHeader = calculateAuthorizationHeader({
+        id: platform.cleanedID,
+        key: platform.cleanedKEY,
+        host: platform.apiUrl,
+        url: '/fix/v1/project/batch_upload',
+        method: 'POST',
     })
 
     if (options.DEBUG == 'true'){
@@ -186,6 +187,8 @@ export async function uploadBatch(credentials:any, tarPath:any, options:any) {
                     // Check Content-Type to determine how to parse response
                     const contentType = res.headers['content-type'] || '';
                     let responseData = data;
+                    console.log('Response received from server:')
+                    console.log(responseData)
                     
                     // if (contentType.includes('application/json')) {
                     //     responseData = data ? JSON.parse(data) : null;
@@ -228,11 +231,11 @@ export async function checkFix(platform:any, projectId:any, options:any) {
 }
 
 async function makeRequest(platform:any, projectId:any, options:any) {
-    const authHeader = await calculateAuthorizationHeader({
+    const authHeader = calculateAuthorizationHeader({
         id: platform.cleanedID,
         key: platform.cleanedKEY,
         host: platform.apiUrl,
-        url: '/fix/v1/project/'+projectId+'/results',
+        url: '/fix/v1/project/' + projectId + '/results',
         method: 'GET',
     })
 
@@ -259,6 +262,9 @@ async function makeRequest(platform:any, projectId:any, options:any) {
 
     const response = await makeHttpsRequest(reqOptions);
 
+    console.log('Response received from server:')
+    console.log(response)
+    
     if (!response.data) {
         console.log('Response is empty. Retrying in 10 seconds.');
         await new Promise(resolve => setTimeout(resolve, 10000));
@@ -286,11 +292,11 @@ async function makeRequestBatch(credentials:any, projectId:any, options:any) {
 
     const platform:any = await selectPlatfrom(credentials)
 
-    const authHeader = await calculateAuthorizationHeader({
+    const authHeader = calculateAuthorizationHeader({
         id: platform.cleanedID,
         key: platform.cleanedKEY,
         host: platform.apiUrl,
-        url: '/fix/v1/project/'+projectId+'/batch_status',
+        url: '/fix/v1/project/' + projectId + '/batch_status',
         method: 'GET',
     })
 
@@ -357,11 +363,11 @@ export async function pullBatchFixResults(credentials:any, projectId:any, option
 
     const platform:any = await selectPlatfrom(credentials)
 
-    const authHeader = await calculateAuthorizationHeader({
+    const authHeader = calculateAuthorizationHeader({
         id: platform.cleanedID,
         key: platform.cleanedKEY,
         host: platform.apiUrl,
-        url: '/fix/v1/project/'+projectId+'/batch_results',
+        url: '/fix/v1/project/' + projectId + '/batch_results',
         method: 'GET',
     })
 
