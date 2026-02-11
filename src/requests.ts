@@ -187,9 +187,9 @@ export async function uploadBatch(credentials:any, tarPath:any, options:any) {
                     const contentType = res.headers['content-type'] || '';
                     let responseData = data;
                     
-                    if (contentType.includes('application/json')) {
-                        responseData = data ? JSON.parse(data) : null;
-                    }
+                    // if (contentType.includes('application/json')) {
+                    //     responseData = data ? JSON.parse(data) : null;
+                    // }
                     // else: keep raw response (plain text UUID, etc)
                     
                     if (res.statusCode != 200) {
