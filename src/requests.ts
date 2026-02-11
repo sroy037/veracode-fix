@@ -15,12 +15,13 @@ function makeHttpsRequest(options: any): Promise<any> {
             });
             res.on('end', () => {
                 try {
-                    // Check Content-Type to determine how to parse response
+                    // Parse response: check Content-Type AND validate JSON structure
                     const contentType = res.headers['content-type'] || '';
                     let responseData = data;
                     
-                    if (contentType.includes('application/json')) {
-                        responseData = data ? JSON.parse(data) : null;
+                    // Only parse as JSON if Content-Type says so AND response looks like JSON (starts with { or [)
+                    if (contentType.includes('application/json') && data && (data.trim().startsWith('{') || data.trim().startsWith('['))) {
+                        responseData = JSON.parse(data);
                     }
                     // else: keep raw response as-is
                     
@@ -95,12 +96,18 @@ export async function upload(platform:any, tar:any, options:any) {
             });
             res.on('end', () => {
                 try {
-                    // Check Content-Type to determine how to parse response
+                    // Parse response: check Content-Type AND validate JSON structure
                     const contentType = res.headers['content-type'] || '';
                     let responseData = data;
                     
-                    if (contentType.includes('application/json')) {
-                        responseData = data ? JSON.parse(data) : null;
+                    if (options.DEBUG == 'true') {
+                        console.log('Response Content-Type: ' + contentType);
+                        console.log('Response data (first 100 chars): ' + data.substring(0, 100));
+                    }
+                    
+                    // Only parse as JSON if Content-Type says so AND response looks like JSON (starts with { or [)
+                    if (contentType.includes('application/json') && data && (data.trim().startsWith('{') || data.trim().startsWith('['))) {
+                        responseData = JSON.parse(data);
                     }
                     // else: keep raw response (plain text UUID, etc)
                     
@@ -182,12 +189,18 @@ export async function uploadBatch(credentials:any, tarPath:any, options:any) {
             });
             res.on('end', () => {
                 try {
-                    // Check Content-Type to determine how to parse response
+                    // Parse response: check Content-Type AND validate JSON structure
                     const contentType = res.headers['content-type'] || '';
                     let responseData = data;
                     
-                    if (contentType.includes('application/json')) {
-                        responseData = data ? JSON.parse(data) : null;
+                    if (options.DEBUG == 'true') {
+                        console.log('Response Content-Type: ' + contentType);
+                        console.log('Response data (first 100 chars): ' + data.substring(0, 100));
+                    }
+                    
+                    // Only parse as JSON if Content-Type says so AND response looks like JSON (starts with { or [)
+                    if (contentType.includes('application/json') && data && (data.trim().startsWith('{') || data.trim().startsWith('['))) {
+                        responseData = JSON.parse(data);
                     }
                     // else: keep raw response (plain text UUID, etc)
                     
