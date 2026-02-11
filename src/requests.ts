@@ -15,7 +15,15 @@ function makeHttpsRequest(options: any): Promise<any> {
             });
             res.on('end', () => {
                 try {
-                    const responseData = data ? JSON.parse(data) : null;
+                    // Check Content-Type to determine how to parse response
+                    const contentType = res.headers['content-type'] || '';
+                    let responseData = data;
+                    
+                    if (contentType.includes('application/json')) {
+                        responseData = data ? JSON.parse(data) : null;
+                    }
+                    // else: keep raw response as-is
+                    
                     resolve({
                         status: res.statusCode,
                         statusText: res.statusMessage,
@@ -23,6 +31,7 @@ function makeHttpsRequest(options: any): Promise<any> {
                         headers: res.headers
                     });
                 } catch (e) {
+                    // If JSON parsing still fails, return raw data
                     resolve({
                         status: res.statusCode,
                         statusText: res.statusMessage,
@@ -86,7 +95,15 @@ export async function upload(platform:any, tar:any, options:any) {
             });
             res.on('end', () => {
                 try {
-                    const responseData = data ? JSON.parse(data) : null;
+                    // Check Content-Type to determine how to parse response
+                    const contentType = res.headers['content-type'] || '';
+                    let responseData = data;
+                    
+                    if (contentType.includes('application/json')) {
+                        responseData = data ? JSON.parse(data) : null;
+                    }
+                    // else: keep raw response (plain text UUID, etc)
+                    
                     if (res.statusCode != 200){
                         console.log('Error uploading data')
                         if (options.DEBUG == 'true'){
@@ -101,11 +118,10 @@ export async function upload(platform:any, tar:any, options:any) {
                         console.log('Project ID is:')
                         console.log(responseData);
                         resolve(responseData);
-                        return;
                     }
-                } catch (e) {
+                } catch (parseError) {
                     console.log('Error parsing response')
-                    reject(e);
+                    reject(parseError);
                 }
             });
         });
@@ -166,26 +182,32 @@ export async function uploadBatch(credentials:any, tarPath:any, options:any) {
             });
             res.on('end', () => {
                 try {
-                    const responseData = data ? JSON.parse(data) : null;
-                    if (res.statusCode != 200){
+                    // Check Content-Type to determine how to parse response
+                    const contentType = res.headers['content-type'] || '';
+                    let responseData = data;
+                    
+                    if (contentType.includes('application/json')) {
+                        responseData = data ? JSON.parse(data) : null;
+                    }
+                    // else: keep raw response (plain text UUID, etc)
+                    
+                    if (res.statusCode != 200) {
                         console.log('Error uploading data')
-                        if (options.DEBUG == 'true'){
+                        if (options.DEBUG == 'true') {
                             console.log('#######- DEBUG MODE -#######')
                             console.log('requests.ts - uploadBatch')
                             console.log(responseData)
                             console.log('#######- DEBUG MODE -#######')
                         }
-                    }
-                    else {
+                    } else {
                         console.log('Data uploaded successfully')
                         console.log('Project ID is:')
                         console.log(responseData);
                         resolve(responseData);
-                        return;
                     }
-                } catch (e) {
+                } catch (parseError) {
                     console.log('Error parsing response')
-                    reject(e);
+                    reject(parseError);
                 }
             });
         });

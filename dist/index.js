@@ -52735,7 +52735,13 @@ function makeHttpsRequest(options) {
             });
             res.on('end', () => {
                 try {
-                    const responseData = data ? JSON.parse(data) : null;
+                    // Check Content-Type to determine how to parse response
+                    const contentType = res.headers['content-type'] || '';
+                    let responseData = data;
+                    if (contentType.includes('application/json')) {
+                        responseData = data ? JSON.parse(data) : null;
+                    }
+                    // else: keep raw response as-is
                     resolve({
                         status: res.statusCode,
                         statusText: res.statusMessage,
@@ -52744,6 +52750,7 @@ function makeHttpsRequest(options) {
                     });
                 }
                 catch (e) {
+                    // If JSON parsing still fails, return raw data
                     resolve({
                         status: res.statusCode,
                         statusText: res.statusMessage,
@@ -52796,7 +52803,13 @@ function upload(platform, tar, options) {
                 });
                 res.on('end', () => {
                     try {
-                        const responseData = data ? JSON.parse(data) : null;
+                        // Check Content-Type to determine how to parse response
+                        const contentType = res.headers['content-type'] || '';
+                        let responseData = data;
+                        if (contentType.includes('application/json')) {
+                            responseData = data ? JSON.parse(data) : null;
+                        }
+                        // else: keep raw response (plain text UUID, etc)
                         if (res.statusCode != 200) {
                             console.log('Error uploading data');
                             if (options.DEBUG == 'true') {
@@ -52811,12 +52824,11 @@ function upload(platform, tar, options) {
                             console.log('Project ID is:');
                             console.log(responseData);
                             resolve(responseData);
-                            return;
                         }
                     }
-                    catch (e) {
+                    catch (parseError) {
                         console.log('Error parsing response');
-                        reject(e);
+                        reject(parseError);
                     }
                 });
             });
@@ -52866,7 +52878,13 @@ function uploadBatch(credentials, tarPath, options) {
                 });
                 res.on('end', () => {
                     try {
-                        const responseData = data ? JSON.parse(data) : null;
+                        // Check Content-Type to determine how to parse response
+                        const contentType = res.headers['content-type'] || '';
+                        let responseData = data;
+                        if (contentType.includes('application/json')) {
+                            responseData = data ? JSON.parse(data) : null;
+                        }
+                        // else: keep raw response (plain text UUID, etc)
                         if (res.statusCode != 200) {
                             console.log('Error uploading data');
                             if (options.DEBUG == 'true') {
@@ -52881,12 +52899,11 @@ function uploadBatch(credentials, tarPath, options) {
                             console.log('Project ID is:');
                             console.log(responseData);
                             resolve(responseData);
-                            return;
                         }
                     }
-                    catch (e) {
+                    catch (parseError) {
                         console.log('Error parsing response');
-                        reject(e);
+                        reject(parseError);
                     }
                 });
             });
