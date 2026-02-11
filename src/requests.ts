@@ -103,11 +103,15 @@ export async function upload(platform:any, tar:any, options:any) {
                     if (options.DEBUG == 'true') {
                         console.log('Response Content-Type: ' + contentType);
                         console.log('Response data (first 100 chars): ' + data.substring(0, 100));
+                        console.log('Data starts with { or [? ' + (data && (data.trim().startsWith('{') || data.trim().startsWith('['))));
                     }
                     
                     // Only parse as JSON if Content-Type says so AND response looks like JSON (starts with { or [)
                     if (contentType.includes('application/json') && data && (data.trim().startsWith('{') || data.trim().startsWith('['))) {
+                        if (options.DEBUG == 'true') console.log('Parsing as JSON');
                         responseData = JSON.parse(data);
+                    } else {
+                        if (options.DEBUG == 'true') console.log('Keeping as raw response');
                     }
                     // else: keep raw response (plain text UUID, etc)
                     
