@@ -337,8 +337,7 @@ async function makeRequestBatch(credentials:any, projectId:any, options:any) {
             console.log(response.data);
             console.log('#######- DEBUG MODE -#######')
         }
-        console.log(response.data)
-        console.log('hasMore value is: '+response.data.hasMore)
+
         if ( response.data.hasMore == true){
             console.log('More fixes are being generated. Retrying in 10 seconds.');
 
