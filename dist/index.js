@@ -52761,6 +52761,7 @@ function makeHttpsRequest(options) {
             });
         });
         req.on('error', reject);
+        req.end();
         return req;
     });
 }

@@ -44,6 +44,7 @@ function makeHttpsRequest(options: any): Promise<any> {
         });
 
         req.on('error', reject);
+        req.end();
         return req;
     });
 }
@@ -264,7 +265,7 @@ async function makeRequest(platform:any, projectId:any, options:any) {
 
     console.log('Response received from server:')
     console.log(response)
-    
+
     if (!response.data) {
         console.log('Response is empty. Retrying in 10 seconds.');
         await new Promise(resolve => setTimeout(resolve, 10000));
