@@ -400,8 +400,9 @@ export async function pullBatchFixResults(credentials:any, projectId:any, option
     console.log('Response received from server:')
     console.log(response)
     if (!response.data) {
-        console.log('Response is empty. Something went wrong. No fixes generarted. ');
-        return 0
+        console.log('Response is empty. Retrying in 10 seconds.');
+        await new Promise(resolve => setTimeout(resolve, 10000));
+        return await makeHttpsRequest(reqOptions);
     } else {
         console.log('Fixes fetched successfully');
         if (options.DEBUG == 'true'){
