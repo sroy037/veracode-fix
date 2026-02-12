@@ -53072,6 +53072,8 @@ function pullBatchFixResults(credentials, projectId, options) {
             }
         };
         const response = yield makeHttpsRequest(reqOptions);
+        console.log('Response received from server:');
+        console.log(response);
         if (!response.data) {
             console.log('Response is empty. Something went wrong. No fixes generarted. ');
             return 0;
