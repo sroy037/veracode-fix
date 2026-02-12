@@ -100,13 +100,6 @@ export async function upload(platform:any, tar:any, options:any) {
                     // Check Content-Type to determine how to parse response
                     const contentType = res.headers['content-type'] || '';
                     let responseData = data;
-                    console.log('Response received from server:')
-                    console.log(responseData)
-                    
-                    // if (contentType.includes('application/json')) {
-                    //     responseData = data ? JSON.parse(data) : null;
-                    // }
-                    // else: keep raw response (plain text UUID, etc)
                     
                     if (res.statusCode != 200){
                         console.log('Error uploading data')
@@ -190,13 +183,6 @@ export async function uploadBatch(credentials:any, tarPath:any, options:any) {
                     // Check Content-Type to determine how to parse response
                     const contentType = res.headers['content-type'] || '';
                     let responseData = data;
-                    console.log('Response received from server:')
-                    console.log(responseData)
-                    
-                    // if (contentType.includes('application/json')) {
-                    //     responseData = data ? JSON.parse(data) : null;
-                    // }
-                    // else: keep raw response (plain text UUID, etc)
                     
                     if (res.statusCode != 200) {
                         console.log('Error uploading data')
@@ -264,9 +250,6 @@ async function makeRequest(platform:any, projectId:any, options:any) {
     };
 
     const response = await makeHttpsRequest(reqOptions);
-
-    console.log('Response received from server:')
-    console.log(response)
 
     if (!response.data) {
         console.log('Response is empty. Retrying in 10 seconds.');
@@ -397,8 +380,7 @@ export async function pullBatchFixResults(credentials:any, projectId:any, option
     };
 
     const response = await makeHttpsRequest(reqOptions);
-    console.log('Response received from server:')
-    console.log(response)
+
     if (!response.data) {
         console.log('Response is empty. Retrying in 10 seconds.');
         await new Promise(resolve => setTimeout(resolve, 10000));

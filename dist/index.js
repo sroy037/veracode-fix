@@ -52807,12 +52807,6 @@ function upload(platform, tar, options) {
                         // Check Content-Type to determine how to parse response
                         const contentType = res.headers['content-type'] || '';
                         let responseData = data;
-                        console.log('Response received from server:');
-                        console.log(responseData);
-                        // if (contentType.includes('application/json')) {
-                        //     responseData = data ? JSON.parse(data) : null;
-                        // }
-                        // else: keep raw response (plain text UUID, etc)
                         if (res.statusCode != 200) {
                             console.log('Error uploading data');
                             if (options.DEBUG == 'true') {
@@ -52884,12 +52878,6 @@ function uploadBatch(credentials, tarPath, options) {
                         // Check Content-Type to determine how to parse response
                         const contentType = res.headers['content-type'] || '';
                         let responseData = data;
-                        console.log('Response received from server:');
-                        console.log(responseData);
-                        // if (contentType.includes('application/json')) {
-                        //     responseData = data ? JSON.parse(data) : null;
-                        // }
-                        // else: keep raw response (plain text UUID, etc)
                         if (res.statusCode != 200) {
                             console.log('Error uploading data');
                             if (options.DEBUG == 'true') {
@@ -52954,8 +52942,6 @@ function makeRequest(platform, projectId, options) {
             }
         };
         const response = yield makeHttpsRequest(reqOptions);
-        console.log('Response received from server:');
-        console.log(response);
         if (!response.data) {
             console.log('Response is empty. Retrying in 10 seconds.');
             yield new Promise(resolve => setTimeout(resolve, 10000));
@@ -53074,8 +53060,6 @@ function pullBatchFixResults(credentials, projectId, options) {
             }
         };
         const response = yield makeHttpsRequest(reqOptions);
-        console.log('Response received from server:');
-        console.log(response);
         if (!response.data) {
             console.log('Response is empty. Retrying in 10 seconds.');
             yield new Promise(resolve => setTimeout(resolve, 10000));
