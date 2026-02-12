@@ -247,7 +247,7 @@ async function makeRequest(platform:any, projectId:any, options:any) {
 
     const response = await makeHttpsRequest(reqOptions);
 
-    if (!response.data) {
+    if (!response.data && response.status != 200) {
         console.log('Response is empty. Retrying in 10 seconds.');
         await new Promise(resolve => setTimeout(resolve, 10000));
         return await makeRequest(platform, projectId, options);
@@ -377,7 +377,7 @@ export async function pullBatchFixResults(credentials:any, projectId:any, option
 
     const response = await makeHttpsRequest(reqOptions);
 
-    if (!response.data) {
+    if (!response.data && response.status != 200) {
         console.log('Response is empty. Retrying in 10 seconds.');
         await new Promise(resolve => setTimeout(resolve, 10000));
         return await makeHttpsRequest(reqOptions);

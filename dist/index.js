@@ -52938,7 +52938,7 @@ function makeRequest(platform, projectId, options) {
             }
         };
         const response = yield makeHttpsRequest(reqOptions);
-        if (!response.data) {
+        if (!response.data && response.status != 200) {
             console.log('Response is empty. Retrying in 10 seconds.');
             yield new Promise(resolve => setTimeout(resolve, 10000));
             return yield makeRequest(platform, projectId, options);
@@ -53056,7 +53056,7 @@ function pullBatchFixResults(credentials, projectId, options) {
             }
         };
         const response = yield makeHttpsRequest(reqOptions);
-        if (!response.data) {
+        if (!response.data && response.status != 200) {
             console.log('Response is empty. Retrying in 10 seconds.');
             yield new Promise(resolve => setTimeout(resolve, 10000));
             return yield makeHttpsRequest(reqOptions);
