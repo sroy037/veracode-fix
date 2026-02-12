@@ -52807,9 +52807,11 @@ function upload(platform, tar, options) {
                         // Check Content-Type to determine how to parse response
                         const contentType = res.headers['content-type'] || '';
                         let responseData = data;
-                        if (contentType.includes('application/json')) {
-                            responseData = data ? JSON.parse(data) : null;
-                        }
+                        console.log('Response received from server:');
+                        console.log(responseData);
+                        // if (contentType.includes('application/json')) {
+                        //     responseData = data ? JSON.parse(data) : null;
+                        // }
                         // else: keep raw response (plain text UUID, etc)
                         if (res.statusCode != 200) {
                             console.log('Error uploading data');
