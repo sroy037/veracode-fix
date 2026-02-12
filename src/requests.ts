@@ -97,8 +97,6 @@ export async function upload(platform:any, tar:any, options:any) {
             });
             res.on('end', () => {
                 try {
-                    // Check Content-Type to determine how to parse response
-                    const contentType = res.headers['content-type'] || '';
                     let responseData = data;
                     
                     if (res.statusCode != 200){
@@ -180,8 +178,6 @@ export async function uploadBatch(credentials:any, tarPath:any, options:any) {
             });
             res.on('end', () => {
                 try {
-                    // Check Content-Type to determine how to parse response
-                    const contentType = res.headers['content-type'] || '';
                     let responseData = data;
                     
                     if (res.statusCode != 200) {

@@ -52804,8 +52804,6 @@ function upload(platform, tar, options) {
                 });
                 res.on('end', () => {
                     try {
-                        // Check Content-Type to determine how to parse response
-                        const contentType = res.headers['content-type'] || '';
                         let responseData = data;
                         if (res.statusCode != 200) {
                             console.log('Error uploading data');
@@ -52875,8 +52873,6 @@ function uploadBatch(credentials, tarPath, options) {
                 });
                 res.on('end', () => {
                     try {
-                        // Check Content-Type to determine how to parse response
-                        const contentType = res.headers['content-type'] || '';
                         let responseData = data;
                         if (res.statusCode != 200) {
                             console.log('Error uploading data');
